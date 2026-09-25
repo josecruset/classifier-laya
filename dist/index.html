@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A local test bench for Laya-MLX choice, score, and noul decisions."
+    />
+    <title>Popo - Decider</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="./index.html" aria-label="Popo - Decider home">
+        <span class="brand-mark" aria-hidden="true">P</span>
+        <span>Popo - Decider</span>
+      </a>
+      <div class="runtime-status" id="runtimeStatus" aria-live="polite">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span>Checking local runtime…</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="intro" aria-labelledby="pageTitle">
+        <div>
+          <p class="eyebrow">Local decision test bench</p>
+          <h1 id="pageTitle">Popo Decider</h1>
+        </div>
+        <p class="intro-copy">
+          Give Laya a state and one bounded question. Test a preset or edit every field yourself.
+          The response is shown exactly as JSON.
+        </p>
+      </section>
+
+      <section class="workspace" aria-label="Laya decision workspace">
+        <form class="composer" id="decisionForm">
+          <div class="section-heading">
+            <div>
+              <span class="step">01</span>
+              <h2>Compose a decision</h2>
+            </div>
+            <button class="reset-button" id="resetButton" type="button">Reset example</button>
+          </div>
+
+          <div class="preset-strip" aria-label="Example decisions">
+            <p class="field-label">Start with an example</p>
+            <div class="preset-list" id="presetList"></div>
+          </div>
+
+          <div class="field-group model-field">
+            <label for="modelSelect">
+              Model
+              <span id="modelContext">English · 512-token context</span>
+            </label>
+            <div class="select-wrap">
+              <select id="modelSelect" name="model">
+                <option value="aac6fef/laya-mlx">English · 421M</option>
+                <option value="aac6fef/laya-multilingual-mlx">Multilingual · 322M</option>
+                <option value="aac6fef/laya-typed-decisions-mlx">Typed decisions · 421M</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="stateInput">
+              State
+              <span>The text or context Laya should evaluate</span>
+            </label>
+            <textarea id="stateInput" name="state" rows="5" required></textarea>
+            <div class="field-meta"><span id="stateCount">0 characters</span></div>
+          </div>
+
+          <fieldset class="type-fieldset">
+            <legend>Question type</legend>
+            <div class="type-switch" id="typeSwitch">
+              <label>
+                <input type="radio" name="decisionType" value="choice" checked />
+                <span><b>Choice</b><small>Pick one option</small></span>
+              </label>
+              <label>
+                <input type="radio" name="decisionType" value="score" />
+                <span><b>Score</b><small>Rank on a scale</small></span>
+              </label>
+              <label>
+                <input type="radio" name="decisionType" value="noul" />
+                <span><b>Noul</b><small>Estimate P(true)</small></span>
+              </label>
+            </div>
+          </fieldset>
+
+          <div class="question-grid">
+            <div class="field-group compact-field">
+              <label for="questionKey">Result key</label>
+              <input id="questionKey" name="questionKey" value="department" required pattern="[A-Za-z0-9_]+" />
+            </div>
+            <div class="field-group instructions-field">
+              <label for="instructionsInput">Question</label>
+              <input id="instructionsInput" name="instructions" required />
+            </div>
+          </div>
+
+          <div class="field-group" id="criteriaGroup">
+            <label for="criteriaInput">
+              <span id="criteriaLabel">Options</span>
+              <span id="criteriaHelp">One possible answer per line</span>
+            </label>
+            <textarea id="criteriaInput" name="criteria" rows="4"></textarea>
+          </div>
+
+          <div class="form-footer">
+            <p id="formMessage" class="form-message" role="status"></p>
+            <button class="run-button" id="runButton" type="submit">
+              <span class="run-label">Run decision</span>
+              <span class="run-shortcut" aria-hidden="true">⌘ ↵</span>
+            </button>
+          </div>
+        </form>
+
+        <aside class="output-panel" aria-labelledby="outputTitle">
+          <div class="output-header">
+            <div>
+              <span class="step">02</span>
+              <h2 id="outputTitle">Raw response</h2>
+            </div>
+            <button class="copy-button" id="copyButton" type="button" disabled>Copy JSON</button>
+          </div>
+
+          <div class="output-meta">
+            <span id="outputState" class="output-state">Waiting for a decision</span>
+            <span id="latencyValue">—</span>
+          </div>
+
+          <pre class="json-output" id="jsonOutput" tabindex="0"><code>{
+  "hint": "Choose an example or enter your own question, then run the decision."
+}</code></pre>
+
+          <div class="model-note">
+            <span class="model-chip" id="modelChip">EN · 512</span>
+            <div>
+              <strong id="modelName">aac6fef/laya-mlx</strong>
+              <p id="modelDescription">English decisions · FP16. First use downloads and loads this checkpoint.</p>
+            </div>
+          </div>
+        </aside>
+      </section>
+    </main>
+
+    <footer>
+      <p>Laya returns bounded decisions, not generated prose.</p>
+      <a href="https://github.com/mizorewww/laya-mlx" target="_blank" rel="noreferrer">View Laya-MLX</a>
+    </footer>
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>
